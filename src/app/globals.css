@@ -44,7 +44,6 @@
 
 @layer base {
   :root {
-    /* Color */
     --color-primary: 210, 100%, 12%;
     --color-secondary: 212, 100%, 97%;
     --color-tertiary: 228, 100%, 99%;
@@ -53,6 +52,17 @@
     --color-paleblue: 212, 87%, 91%;
     --color-paledark: 210, 33%, 98%;
     --color-darkred: 0, 0%, 11%;
+  }
+
+  .dark {
+    --color-primary: 210, 100%, 95%;
+    --color-secondary: 212, 100%, 20%;
+    --color-tertiary: 228, 100%, 10%;
+    --color-palebdanger: 0, 81%, 20%;
+    --color-light: 0, 0%, 10%;
+    --color-paleblue: 212, 87%, 30%;
+    --color-paledark: 210, 33%, 20%;
+    --color-darkred: 0, 0%, 5%;
   }
 }
 
