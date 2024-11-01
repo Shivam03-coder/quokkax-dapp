@@ -1,15 +1,10 @@
 "use client";
 import { useRef } from "react";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import {
-  TypedUseSelectorHook,
-  useDispatch,
-  useSelector,
-  Provider,
-} from "react-redux";
+import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { ApiService } from "./middleware";
-import { applicationState } from "./state";
+import { applicationState } from "./state/golbal";
 
 const rootReducer = combineReducers({
   global: applicationState.reducer,
