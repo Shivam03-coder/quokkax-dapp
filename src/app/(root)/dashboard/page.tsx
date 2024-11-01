@@ -1,7 +1,7 @@
 import React from "react";
 
-const page = () => {
-  return <div></div>;
+const DashboardPage = () => {
+  return <div className="bg-yellow-50">DashboardPage</div>;
 };
 
-export default page;
+export default DashboardPage;

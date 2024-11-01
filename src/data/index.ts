@@ -11,4 +11,9 @@ export const NavbarLinksData: Array<TNavbarLinks> = [
     href: "/dashboard",
     label: "Dashboard",
   },
+  {
+    id: 2,
+    href: "/addnewcampaign",
+    label: "New-campaign",
+  },
 ];
