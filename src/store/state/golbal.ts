@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface initialStateTypes {
+interface initialStateTypes {
   isSidebarOpen: boolean;
   isdarkMode: boolean;
   walletAddress: string;

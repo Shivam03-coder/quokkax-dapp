@@ -1,17 +1,21 @@
-"use client"
+"use client";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useAppDispatch } from "@/hooks/hook";
 import { useToast } from "@/hooks/use-toast";
+import { setImageUrl, setStoryUrl } from "@/store/state/ipfs";
 import axios from "axios";
 import React, { ChangeEvent, useState } from "react";
 
 const Dragdropimage = () => {
-  const [imageUrl, setImageUrl] = useState<string>("");
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [file, setfile] = useState<File | null>(null);
   const [Story, setStory] = useState<string>("");
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
+  const [Loading, setLoading] = useState<boolean>(false);
+
   const handleStoryChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setStory(e.target.value);
   };
@@ -31,21 +35,18 @@ const Dragdropimage = () => {
         className: "bg-red-500 uppercase",
       });
     }
-    const formData = new FormData();
+    setLoading(true);
+    const ImageformData = new FormData();
+    const formDataText = new FormData();
 
-    formData.append("file", file!);
-
-    formData.append(
-      "storydata",
-      JSON.stringify({
-        Story,
-      })
-    );
+    const textBlob = new Blob([Story], { type: "text/plain" });
+    formDataText.append("file", textBlob, "story.txt");
+    ImageformData.append("file", file!);
 
     try {
-      const response = await axios.post(
+      const Imageresponse = await axios.post(
         "https://api.pinata.cloud/pinning/pinFileToIPFS",
-        formData,
+        ImageformData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -55,7 +56,37 @@ const Dragdropimage = () => {
         }
       );
 
-      console.log("File uploaded:", response.data);
+      const StoryResponse = await axios.post(
+        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        formDataText,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            pinata_api_key: process.env.NEXT_PUBLIC_PINATA_API_KEY,
+            pinata_secret_api_key: process.env.NEXT_PUBLIC_PINATA_SECRET_KEY,
+          },
+        }
+      );
+
+      if (Imageresponse.data) {
+        dispatch(
+          setImageUrl(
+            `https://gateway.pinata.cloud/ipfs/${Imageresponse.data?.IpfsHash}`
+          )
+        );
+
+        setfile(null);
+      }
+      if (StoryResponse.data) {
+        dispatch(
+          setStoryUrl(
+            `https://gateway.pinata.cloud/ipfs/${StoryResponse.data?.IpfsHash}`
+          )
+        );
+        setStory("");
+      }
+
+      setLoading(false);
       toast({
         variant: "destructive",
         title: "Upload successful",
@@ -107,6 +138,7 @@ const Dragdropimage = () => {
         <Label className="font-medium text-base">Campaign Story</Label>
         <Textarea
           rows={4}
+          value={Story}
           placeholder="Tell your campaign story..."
           className="w-full"
           onChange={handleStoryChange}
@@ -118,7 +150,7 @@ const Dragdropimage = () => {
         onClick={UploadToPinata}
         className="text-secondary w-full uppercase bg-primary px-10 py-3 hover:bg-primary"
       >
-        Upload Image to ipfs
+        {Loading ? "Uploading......" : " Upload Image to ipfs"}
       </Button>
     </div>
   );

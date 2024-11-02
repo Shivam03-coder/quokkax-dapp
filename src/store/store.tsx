@@ -5,9 +5,11 @@ import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { ApiService } from "./middleware";
 import { applicationState } from "./state/golbal";
+import { IPFSstate } from "./state/ipfs";
 
 const rootReducer = combineReducers({
   global: applicationState.reducer,
+  ipfs: IPFSstate.reducer,
   [ApiService.reducerPath]: ApiService.reducer,
 });
 
